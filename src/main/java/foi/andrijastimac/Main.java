@@ -1,10 +1,10 @@
 package foi.andrijastimac;
 
-import java.io.*;
-import java.net.*;
+import foi.andrijastimac.server.HttpServer;
 
 public class Main {
     public static void main(String[] args) {
-
+        HttpServer server = new HttpServer(8080);
+        server.start();
     }
 }
