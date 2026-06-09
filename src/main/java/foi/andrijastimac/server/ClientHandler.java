@@ -16,34 +16,65 @@ public class ClientHandler {
     }
 
     public void handle() {
-        try(BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        PrintWriter out = new PrintWriter(client.getOutputStream())){
+
+        try (
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(client.getInputStream())
+                );
+
+                PrintWriter out = new PrintWriter(
+                        client.getOutputStream()
+                )
+        ) {
+
             String requestLine = in.readLine();
 
             if (requestLine == null) {
+                client.close();
                 return;
             }
 
+            System.out.println("REQUEST LINE:");
+            System.out.println(requestLine);
+
+            /*String header;
+
+            while ((header = in.readLine()) != null && !header.isEmpty()) {
+                System.out.println(header);
+            }*/
+
             String[] parts = requestLine.split(" ");
+
             String path = parts[1];
 
             Router router = new Router();
 
             String content = router.route(path);
-            String contentType = path.endsWith(".css")
-                    ? "text/css"
-                    : "text/html";
 
-            out.println("HTTP/1.1 200 OK");
+            boolean found = !content.equals("404");
+
+            String contentType = "text/html";
+
+            if (path.endsWith(".css")) {
+                contentType = "text/css";
+            }
+
+            if (found) {
+                out.println("HTTP/1.1 200 OK");
+            } else {
+                out.println("HTTP/1.1 404 Not Found");
+                content = "<h1>404 Not Found</h1>";
+            }
+
             out.println("Content-Type: " + contentType + "; charset=utf-8");
             out.println();
             out.println(content);
             out.flush();
 
             client.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    }
 }

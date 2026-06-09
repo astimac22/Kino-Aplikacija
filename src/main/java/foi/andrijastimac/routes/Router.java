@@ -18,6 +18,6 @@ public class Router {
             return new CssController().style();
         }
 
-        return "<h1>404 Not Found</h1>";
+        return "404";
     }
 }
