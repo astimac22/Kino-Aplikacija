@@ -28,14 +28,43 @@ public class SeatController {
             String cssClass = "seat";
 
             if (seat.isReserved()) {
-                cssClass = "seat reserved";
-            }
 
-            html.append("<div class=\"")
-                    .append(cssClass)
-                    .append("\">")
-                    .append(seat.getNumber())
-                    .append("</div>");
+                cssClass = "seat reserved";
+
+                html.append("""
+                <div class="seat-wrapper">
+                """);
+
+                html.append("<div class=\"")
+                        .append(cssClass)
+                        .append("\">")
+                        .append(seat.getNumber())
+                        .append("</div>");
+
+                html.append("""
+                </div>
+                """);
+
+            } else {
+
+                html.append("""
+                <div class="seat-wrapper">
+                <form method="POST" action="/reserve">
+                """);
+
+                html.append("<input type=\"hidden\" name=\"seat\" value=\"")
+                        .append(seat.getNumber())
+                        .append("\">");
+
+                html.append("<button class=\"seat\">")
+                        .append(seat.getNumber())
+                        .append("</button>");
+
+                html.append("""
+                </form>
+                </div>
+                """);
+            }
         }
 
         html.append("""

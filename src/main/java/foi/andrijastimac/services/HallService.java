@@ -27,4 +27,16 @@ public class HallService {
     public Hall getHall() {
         return hall;
     }
+
+    public void reserveSeat(String seatNumber) {
+
+        for (Seat seat : hall.getSeats()) {
+
+            if (seat.getNumber().equals(seatNumber)) {
+
+                seat.setReserved(true);
+                return;
+            }
+        }
+    }
 }

@@ -37,21 +37,42 @@ public class ClientHandler {
             System.out.println("REQUEST LINE:");
             System.out.println(requestLine);
 
-            /*String header;
-
-            while ((header = in.readLine()) != null && !header.isEmpty()) {
-                System.out.println(header);
-            }*/
-
             String[] parts = requestLine.split(" ");
 
             String path = parts[1];
+            String method = parts[0];
+
+            String header;
+            int contentLength = 0;
+
+            while ((header = in.readLine()) != null && !header.isEmpty()) {
+
+                if (header.startsWith("Content-Length:")) {
+                    contentLength = Integer.parseInt(
+                            header.substring(15).trim()
+                    );
+                }
+            }
+
+            String body = "";
+
+            if (contentLength > 0) {
+
+                char[] buffer = new char[contentLength];
+
+                in.read(buffer);
+
+                body = new String(buffer);
+            }
+
 
             Router router = new Router();
 
-            String content = router.route(path);
-
-            boolean found = !content.equals("404");
+            String content = router.route(
+                    method,
+                    path,
+                    body
+            );
 
             String contentType = "text/html";
 
@@ -59,16 +80,21 @@ public class ClientHandler {
                 contentType = "text/css";
             }
 
-            if (found) {
-                out.println("HTTP/1.1 200 OK");
-            } else {
+            if (content.equals("404")) {
+
                 out.println("HTTP/1.1 404 Not Found");
-                content = "<h1>404 Not Found</h1>";
+                out.println("Content-Type: text/html");
+                out.println();
+                out.println("<h1>404 Not Found</h1>");
+
+            } else {
+
+                out.println("HTTP/1.1 200 OK");
+                out.println("Content-Type: " + contentType + "; charset=utf-8");
+                out.println();
+                out.println(content);
             }
 
-            out.println("Content-Type: " + contentType + "; charset=utf-8");
-            out.println();
-            out.println(content);
             out.flush();
 
             client.close();
