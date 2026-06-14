@@ -1,18 +1,34 @@
 package foi.andrijastimac.controllers;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import foi.andrijastimac.services.TemplateService;
+
+
 
 public class HomeController {
     public String index() {
 
-        try {
-            return Files.readString(
-                    Path.of("src/main/resources/html/index.html")
-            );
-        } catch (IOException e) {
-            return "<h1>Error loading page</h1>";
-        }
+        TemplateService templateService =
+                new TemplateService();
+
+        String html =
+                templateService.loadTemplate(
+                        "index.html"
+                );
+
+        html =
+                templateService.replace(
+                        html,
+                        "title",
+                        "Kino aplikacija"
+                );
+
+        html =
+                templateService.replace(
+                        html,
+                        "description",
+                        "Dobrodošli u sustav za rezervaciju sjedala."
+                );
+
+        return html;
     }
 }
