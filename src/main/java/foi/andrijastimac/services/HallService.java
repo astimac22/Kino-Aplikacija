@@ -3,40 +3,95 @@ package foi.andrijastimac.services;
 import foi.andrijastimac.models.Seat;
 import foi.andrijastimac.models.Hall;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HallService {
-    private static Hall hall;
 
-    static {
-
-        List<Seat> seats = new ArrayList<>();
-
-        seats.add(new Seat("A1", false));
-        seats.add(new Seat("A2", false));
-        seats.add(new Seat("A3", true));
-        seats.add(new Seat("A4", false));
-        seats.add(new Seat("A5", true));
-        seats.add(new Seat("A6", false));
-        seats.add(new Seat("A7", false));
-
-        hall = new Hall(seats);
-    }
+    private final DatabaseService databaseService =
+            new DatabaseService();
 
     public Hall getHall() {
-        return hall;
+
+        List<Seat> seats =
+                new ArrayList<>();
+
+        try (
+                Connection connection =
+                        databaseService.getConnection();
+
+                PreparedStatement statement =
+                        connection.prepareStatement(
+                                """
+                                SELECT seat_number,
+                                       reserved
+                                FROM seats
+                                """
+                        );
+
+                ResultSet resultSet =
+                        statement.executeQuery()
+        ) {
+
+            while (resultSet.next()) {
+
+                String seatNumber =
+                        resultSet.getString(
+                                "seat_number"
+                        );
+
+                boolean reserved =
+                        resultSet.getInt(
+                                "reserved"
+                        ) == 1;
+
+                seats.add(
+                        new Seat(
+                                seatNumber,
+                                reserved
+                        )
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return new Hall(seats);
     }
 
-    public void reserveSeat(String seatNumber) {
+    public void reserveSeat(
+            String seatNumber
+    ) {
 
-        for (Seat seat : hall.getSeats()) {
+        try (
+                Connection connection =
+                        databaseService.getConnection();
 
-            if (seat.getNumber().equals(seatNumber)) {
+                PreparedStatement statement =
+                        connection.prepareStatement(
+                                """
+                                UPDATE seats
+                                SET reserved = 1
+                                WHERE seat_number = ?
+                                """
+                        )
+        ) {
 
-                seat.setReserved(true);
-                return;
-            }
+            statement.setString(
+                    1,
+                    seatNumber
+            );
+
+            statement.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
     }
 }
