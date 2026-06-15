@@ -1,9 +1,6 @@
 package foi.andrijastimac.routes;
 
-import foi.andrijastimac.controllers.HomeController;
-import foi.andrijastimac.controllers.ReservationController;
-import foi.andrijastimac.controllers.SeatController;
-import foi.andrijastimac.controllers.CssController;
+import foi.andrijastimac.controllers.*;
 
 public class Router {
     public String route(String method, String path, String body) {
@@ -22,6 +19,14 @@ public class Router {
 
         if (path.equals("/css/style.css")) {
             return new CssController().style();
+        }
+
+        if (method.equals("GET") && path.equals("/movies")) {
+            return new MovieController().index();
+        }
+
+        if (method.equals("GET") && path.equals("/screenings")) {
+            return new ScreeningController().index(1);
         }
 
         return "404";
