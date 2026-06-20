@@ -26,7 +26,15 @@ public class ScreeningController {
         for (Screening screening : screenings) {
 
             screeningsHtml.append(
-                    "<div class=\"screening-card\">"
+                    "<a class=\"screening-card\" href=\"/seats?screening="
+            );
+
+            screeningsHtml.append(
+                    screening.getId()
+            );
+
+            screeningsHtml.append(
+                    "\">"
             );
 
             screeningsHtml.append(
@@ -34,7 +42,7 @@ public class ScreeningController {
             );
 
             screeningsHtml.append(
-                    "</div>"
+                    "</a>"
             );
         }
 

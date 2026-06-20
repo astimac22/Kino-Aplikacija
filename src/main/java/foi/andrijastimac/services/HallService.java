@@ -64,9 +64,10 @@ public class HallService {
         return new Hall(seats);
     }
 
-    public void reserveSeat(
-            String seatNumber
-    ) {
+    public List<Seat> getSeatsByScreening(int screeningId) {
+
+        List<Seat> seats =
+                new ArrayList<>();
 
         try (
                 Connection connection =
@@ -75,23 +76,32 @@ public class HallService {
                 PreparedStatement statement =
                         connection.prepareStatement(
                                 """
-                                UPDATE seats
-                                SET reserved = 1
-                                WHERE seat_number = ?
+                                SELECT seat_number, reserved
+                                FROM seats
+                                WHERE screening_id = ?
                                 """
                         )
         ) {
 
-            statement.setString(
-                    1,
-                    seatNumber
-            );
+            statement.setInt(1, screeningId);
 
-            statement.executeUpdate();
+            ResultSet resultSet =
+                    statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                seats.add(
+                        new Seat(
+                                resultSet.getString("seat_number"),
+                                resultSet.getInt("reserved") == 1
+                        )
+                );
+            }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
+
+        return seats;
     }
 }

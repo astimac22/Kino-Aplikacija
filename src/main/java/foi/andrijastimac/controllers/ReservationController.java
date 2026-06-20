@@ -1,18 +1,37 @@
 package foi.andrijastimac.controllers;
 
-import foi.andrijastimac.services.HallService;
+import foi.andrijastimac.models.Reservation;
+import foi.andrijastimac.services.ReservationService;
+import foi.andrijastimac.services.TemplateService;
 
 public class ReservationController {
-    public String reserve(String body) {
 
-        String seatNumber =
-                body.replace("seat=", "");
+    private final ReservationService reservationService =
+            new ReservationService();
 
-        HallService service =
-                new HallService();
+    private final TemplateService templateService =
+            new TemplateService();
 
-        service.reserveSeat(seatNumber);
+    public String reserve(String seatNumber, int screeningId) {
 
-        return new SeatController().index();
+        Reservation reservation =
+                reservationService.reserve(seatNumber, screeningId);
+
+        String template =
+                templateService.loadTemplate("confirmation.html");
+
+        template = templateService.replace(
+                template,
+                "seat",
+                reservation.getSeatNumber()
+        );
+
+        template = templateService.replace(
+                template,
+                "screeningTime",
+                reservation.getScreeningTime()
+        );
+
+        return template;
     }
 }

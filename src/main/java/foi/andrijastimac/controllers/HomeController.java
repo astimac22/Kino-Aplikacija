@@ -1,34 +1,51 @@
 package foi.andrijastimac.controllers;
 
+import foi.andrijastimac.models.Movie;
+import foi.andrijastimac.services.MovieService;
 import foi.andrijastimac.services.TemplateService;
 
-
+import java.util.List;
 
 public class HomeController {
+
+    private final MovieService movieService =
+            new MovieService();
+
+    private final TemplateService templateService =
+            new TemplateService();
+
     public String index() {
 
-        TemplateService templateService =
-                new TemplateService();
+        List<Movie> movies =
+                movieService.getMovies();
 
-        String html =
-                templateService.loadTemplate(
-                        "index.html"
-                );
+        StringBuilder moviesHtml =
+                new StringBuilder();
 
-        html =
-                templateService.replace(
-                        html,
-                        "title",
-                        "Kino aplikacija"
-                );
+        for (Movie movie : movies) {
 
-        html =
-                templateService.replace(
-                        html,
-                        "description",
-                        "Dobrodošli u sustav za rezervaciju sjedala."
-                );
+            moviesHtml.append("<div class=\"movie-card\">");
 
-        return html;
+            moviesHtml.append("<h2>");
+            moviesHtml.append(movie.getTitle());
+            moviesHtml.append("</h2>");
+
+            moviesHtml.append("<a href=\"/screenings?movie=");
+            moviesHtml.append(movie.getId());
+            moviesHtml.append("\">");
+            moviesHtml.append("Pogledaj termine");
+            moviesHtml.append("</a>");
+
+            moviesHtml.append("</div>");
+        }
+
+        String template =
+                templateService.loadTemplate("index.html");
+
+        return templateService.replace(
+                template,
+                "movies",
+                moviesHtml.toString()
+        );
     }
 }

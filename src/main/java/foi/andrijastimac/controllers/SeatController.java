@@ -1,41 +1,86 @@
 package foi.andrijastimac.controllers;
 
-import foi.andrijastimac.models.Seat;
 import foi.andrijastimac.services.HallService;
 import foi.andrijastimac.services.TemplateService;
 
+import foi.andrijastimac.models.Seat;
+
+import java.util.List;
+
 public class SeatController {
-    public String index() {
 
-        HallService hallService =
-                new HallService();
+    private final HallService hallService =
+            new HallService();
 
-        TemplateService templateService =
-                new TemplateService();
+    private final TemplateService templateService =
+            new TemplateService();
 
-        String template = templateService.loadTemplate("seats.html");
+    public String index(int screeningId) {
 
-        StringBuilder seatsHtml = new StringBuilder();
+        List<Seat> seats =
+                hallService.getSeatsByScreening(
+                        screeningId
+                );
 
-        for (Seat seat : hallService.getHall().getSeats()) {
+        StringBuilder seatsHtml =
+                new StringBuilder();
 
-            if (seat.isReserved()) {
+        for (Seat seat : seats) {
 
-                seatsHtml.append("<div class=\"seat reserved\">");
-                seatsHtml.append(seat.getNumber());
-                seatsHtml.append("</div>");
+            if (!seat.isReserved()) {
+
+                seatsHtml.append("<form method=\"POST\" action=\"/reserve\">");
+
+                seatsHtml.append(
+                        "<input type=\"hidden\" name=\"seat\" value=\""
+                );
+
+                seatsHtml.append(
+                        seat.getNumber()
+                );
+
+                seatsHtml.append("\">");
+
+                seatsHtml.append(
+                        "<input type=\"hidden\" name=\"screening\" value=\""
+                );
+
+                seatsHtml.append(
+                        screeningId
+                );
+
+                seatsHtml.append("\">");
+
+                seatsHtml.append(
+                        "<button class=\"seat\">"
+                );
+
+                seatsHtml.append(
+                        seat.getNumber()
+                );
+
+                seatsHtml.append("</button>");
+
+                seatsHtml.append("</form>");
 
             } else {
-                seatsHtml.append("<form method=\"POST\" action=\"/reserve\">");
-                seatsHtml.append("<input type=\"hidden\" name=\"seat\" value=\"");
-                seatsHtml.append(seat.getNumber());
-                seatsHtml.append("\">");
-                seatsHtml.append("<button class=\"seat\">");
-                seatsHtml.append(seat.getNumber());
-                seatsHtml.append("</button>");
-                seatsHtml.append("</form>");
+
+                seatsHtml.append(
+                        "<div class=\"seat reserved\">"
+                );
+
+                seatsHtml.append(
+                        seat.getNumber()
+                );
+
+                seatsHtml.append("</div>");
             }
         }
+
+        String template =
+                templateService.loadTemplate(
+                        "seats.html"
+                );
 
         return templateService.replace(
                 template,
