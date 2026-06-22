@@ -29,58 +29,19 @@ public class SeatController {
 
             if (!seat.isReserved()) {
 
-                seatsHtml.append("<form class=\"seat-form\" method=\"POST\" action=\"/reserve\">");
-
-                seatsHtml.append(
-                        "<input type=\"hidden\" name=\"seat\" value=\""
-                );
-
-                seatsHtml.append(
-                        seat.getNumber()
-                );
-
+                seatsHtml.append("<label class=\"seat-wrapper\">");
+                seatsHtml.append("<input type=\"checkbox\" class=\"seat-checkbox\" name=\"seat\" value=\"");
+                seatsHtml.append(seat.getNumber());
                 seatsHtml.append("\">");
-
-                seatsHtml.append(
-                        "<input type=\"hidden\" name=\"screening\" value=\""
-                );
-
-                seatsHtml.append(
-                        screeningId
-                );
-
-                seatsHtml.append("\">");
-
-                seatsHtml.append(
-                        "<input type=\"hidden\" name=\"name\" value=\"\">"
-                );
-
-                seatsHtml.append(
-                        "<input type=\"hidden\" name=\"email\" value=\"\">"
-                );
-
-                seatsHtml.append(
-                        "<button class=\"seat\">"
-                );
-
-                seatsHtml.append(
-                        seat.getNumber()
-                );
-
-                seatsHtml.append("</button>");
-
-                seatsHtml.append("</form>");
+                seatsHtml.append("<span class=\"seat available\">");
+                seatsHtml.append(seat.getNumber());
+                seatsHtml.append("</span>");
+                seatsHtml.append("</label>");
 
             } else {
 
-                seatsHtml.append(
-                        "<div class=\"seat reserved\">"
-                );
-
-                seatsHtml.append(
-                        seat.getNumber()
-                );
-
+                seatsHtml.append("<div class=\"seat reserved\">");
+                seatsHtml.append(seat.getNumber());
                 seatsHtml.append("</div>");
             }
         }
@@ -90,10 +51,12 @@ public class SeatController {
                         "seats.html"
                 );
 
+        template = templateService.replace(
+                template, "screeningId", String.valueOf(screeningId)
+        );
+
         return templateService.replace(
-                template,
-                "seats",
-                seatsHtml.toString()
+                template, "seats", seatsHtml.toString()
         );
     }
 }

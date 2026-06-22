@@ -7,6 +7,7 @@ import foi.andrijastimac.services.ReservationService;
 import foi.andrijastimac.services.TemplateService;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class ReservationController {
 
@@ -20,25 +21,29 @@ public class ReservationController {
             new TemplateService();
 
     public String reserve(
-            String seatNumber,
+            List<String> seatNumbers,
             int screeningId,
             String customerName,
             String customerEmail
     ) {
 
-        Reservation reservation =
+        if (seatNumbers == null || seatNumbers.isEmpty()) {
+            return "<h1>Greška: nije odabrano nijedno sjedalo</h1>";
+        }
+
+        List<Reservation> reservations =
                 reservationService.reserve(
-                        seatNumber,
+                        seatNumbers,
                         screeningId,
                         customerName,
                         customerEmail
                 );
 
-        if (reservation == null) {
+        if (reservations.isEmpty()) {
             return "<h1>Greška pri rezervaciji</h1>";
         }
 
-        return buildConfirmation(reservation);
+        return buildConfirmation(reservations);
     }
 
     public String myReservations(String email) {
@@ -205,31 +210,45 @@ public class ReservationController {
             return "<h1>Greška</h1>";
         }
 
-        return buildConfirmation(reservation);
+        return buildConfirmation(List.of(reservation));
     }
 
-    private String buildConfirmation(Reservation reservation) {
+    private String buildConfirmation(List<Reservation> reservations) {
+
+        Reservation first = reservations.get(0);
+
+        StringBuilder ids = new StringBuilder();
+        StringBuilder seats = new StringBuilder();
+
+        for (int i = 0; i < reservations.size(); i++) {
+            if (i > 0) {
+                ids.append(", ");
+                seats.append(", ");
+            }
+            ids.append("#").append(reservations.get(i).getId());
+            seats.append(reservations.get(i).getSeatNumber());
+        }
 
         String template =
                 templateService.loadTemplate("confirmation.html");
 
         template = templateService.replace(
-                template, "id", String.valueOf(reservation.getId())
+                template, "id", ids.toString()
         );
         template = templateService.replace(
-                template, "movieTitle", reservation.getMovieTitle()
+                template, "movieTitle", first.getMovieTitle()
         );
         template = templateService.replace(
-                template, "seat", reservation.getSeatNumber()
+                template, "seats", seats.toString()
         );
         template = templateService.replace(
-                template, "screeningTime", reservation.getScreeningTime()
+                template, "screeningTime", first.getScreeningTime()
         );
         template = templateService.replace(
-                template, "name", reservation.getCustomerName()
+                template, "name", first.getCustomerName()
         );
         template = templateService.replace(
-                template, "email", reservation.getCustomerEmail()
+                template, "email", first.getCustomerEmail()
         );
 
         return template;

@@ -15,69 +15,79 @@ public class ReservationService {
     private final DatabaseService databaseService =
             new DatabaseService();
 
-    public Reservation reserve(
-            String seatNumber,
+    public List<Reservation> reserve(
+            List<String> seatNumbers,
             int screeningId,
             String customerName,
             String customerEmail
     ) {
 
-        int generatedId = -1;
+        List<Reservation> result = new ArrayList<>();
 
-        try (
-                Connection connection =
-                        databaseService.getConnection();
+        for (String seatNumber : seatNumbers) {
 
-                PreparedStatement statement =
-                        connection.prepareStatement(
-                                """
-                                INSERT INTO reservations
-                                    (seat_number, screening_id, customer_name, customer_email)
-                                VALUES (?, ?, ?, ?)
-                                """,
-                                Statement.RETURN_GENERATED_KEYS
-                        )
-        ) {
+            int generatedId = -1;
 
-            statement.setString(1, seatNumber);
-            statement.setInt(2, screeningId);
-            statement.setString(3, customerName);
-            statement.setString(4, customerEmail);
-            statement.executeUpdate();
+            try (
+                    Connection connection =
+                            databaseService.getConnection();
 
-            ResultSet keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                generatedId = keys.getInt(1);
+                    PreparedStatement statement =
+                            connection.prepareStatement(
+                                    """
+                                    INSERT INTO reservations
+                                        (seat_number, screening_id, customer_name, customer_email)
+                                    VALUES (?, ?, ?, ?)
+                                    """,
+                                    Statement.RETURN_GENERATED_KEYS
+                            )
+            ) {
+
+                statement.setString(1, seatNumber);
+                statement.setInt(2, screeningId);
+                statement.setString(3, customerName);
+                statement.setString(4, customerEmail);
+                statement.executeUpdate();
+
+                ResultSet keys = statement.getGeneratedKeys();
+                if (keys.next()) {
+                    generatedId = keys.getInt(1);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            try (
+                    Connection connection =
+                            databaseService.getConnection();
+
+                    PreparedStatement statement =
+                            connection.prepareStatement(
+                                    """
+                                    UPDATE seats
+                                    SET reserved = 1
+                                    WHERE seat_number = ?
+                                    AND screening_id = ?
+                                    """
+                            )
+            ) {
+
+                statement.setString(1, seatNumber);
+                statement.setInt(2, screeningId);
+                statement.executeUpdate();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Reservation reservation = findById(generatedId);
+            if (reservation != null) {
+                result.add(reservation);
+            }
         }
 
-        try (
-                Connection connection =
-                        databaseService.getConnection();
-
-                PreparedStatement statement =
-                        connection.prepareStatement(
-                                """
-                                UPDATE seats
-                                SET reserved = 1
-                                WHERE seat_number = ?
-                                AND screening_id = ?
-                                """
-                        )
-        ) {
-
-            statement.setString(1, seatNumber);
-            statement.setInt(2, screeningId);
-            statement.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return findById(generatedId);
+        return result;
     }
 
     public Reservation findById(int reservationId) {

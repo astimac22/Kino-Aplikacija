@@ -164,7 +164,7 @@ h2 {
     font-family: Arial, sans-serif;
 }
 
-.seat:hover {
+.seat.available:hover {
     background: #16a34a;
 }
 
@@ -210,9 +210,28 @@ h2 {
     display: inline-block;
 }
 
-.legend-box.available { background: #22c55e; }
-.legend-box.taken     { background: #ef4444; }
-.legend-box.current   { background: #2563eb; }
+.legend-box.available        { background: #22c55e; }
+.legend-box.taken            { background: #ef4444; }
+.legend-box.current          { background: #2563eb; }
+.legend-box.selected-legend  { background: #f59e0b; }
+
+/* Checkbox-based seat selection */
+
+.seat-wrapper {
+    display: contents;
+}
+
+.seat-checkbox {
+    display: none;
+}
+
+.seat-checkbox:checked + .seat {
+    background: #f59e0b;
+}
+
+.seat-checkbox:checked + .seat:hover {
+    background: #d97706;
+}
 
 /* Customer info (seats page) */
 
@@ -231,6 +250,12 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.customer-fields label {
+    font-size: 0.85rem;
+    color: #475569;
+    margin-bottom: -4px;
 }
 
 .customer-fields input {

@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientHandler {
 
@@ -109,7 +111,7 @@ public class ClientHandler {
 
             Integer movieId = null;
             Integer screeningId = null;
-            String seatNumber = null;
+            List<String> seatNumbers = new ArrayList<>();
             String name = null;
             String email = null;
             Integer reservationId = null;
@@ -167,7 +169,7 @@ public class ClientHandler {
                     String value = decode(pair[1]);
 
                     if (key.equals("seat")) {
-                        seatNumber = value;
+                        seatNumbers.add(value);
                     }
 
                     if (key.equals("screening")) {
@@ -201,7 +203,7 @@ public class ClientHandler {
                             path,
                             movieId,
                             screeningId,
-                            seatNumber,
+                            seatNumbers,
                             name,
                             email,
                             reservationId

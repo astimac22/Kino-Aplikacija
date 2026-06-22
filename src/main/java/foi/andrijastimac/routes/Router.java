@@ -2,6 +2,8 @@ package foi.andrijastimac.routes;
 
 import foi.andrijastimac.controllers.*;
 
+import java.util.List;
+
 public class Router {
 
     public String route(
@@ -9,7 +11,7 @@ public class Router {
             String path,
             Integer movieId,
             Integer screeningId,
-            String seatNumber,
+            List<String> seatNumbers,
             String name,
             String email,
             Integer reservationId
@@ -42,7 +44,7 @@ public class Router {
 
         if (method.equals("POST") && path.equals("/reserve")) {
             return new ReservationController()
-                    .reserve(seatNumber, screeningId, name, email);
+                    .reserve(seatNumbers, screeningId, name, email);
         }
 
         if (method.equals("GET") && path.equals("/reservations")) {
@@ -69,11 +71,11 @@ public class Router {
 
         if (method.equals("PUT") && path.equals("/reservation")) {
 
-            if (reservationId == null || seatNumber == null) {
+            if (reservationId == null || seatNumbers == null || seatNumbers.isEmpty()) {
                 return "404";
             }
 
-            return new ReservationController().changeSeat(reservationId, seatNumber);
+            return new ReservationController().changeSeat(reservationId, seatNumbers.get(0));
         }
 
         return "404";
