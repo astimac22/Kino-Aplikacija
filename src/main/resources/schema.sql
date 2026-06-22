@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS seats (
     UNIQUE (seat_number, screening_id)
 );
 
+CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    seat_number TEXT NOT NULL,
+    screening_id INTEGER NOT NULL,
+    customer_name TEXT NOT NULL,
+    customer_email TEXT NOT NULL,
+    FOREIGN KEY (screening_id) REFERENCES screenings(id)
+);
+
 INSERT OR IGNORE INTO movies (id, title) VALUES
     (1, 'Inception'),
     (2, 'Interstellar'),

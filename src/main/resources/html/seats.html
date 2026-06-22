@@ -1,22 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="hr">
 <head>
     <title>Sjedala</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
+<nav class="nav">
+    <a href="/">Filmovi</a>
+    <a href="/reservations">Moje rezervacije</a>
+</nav>
+
 <div class="container">
 
     <h1>Odabir sjedala</h1>
+
+    <div class="customer-info">
+        <h2>Vaši podaci</h2>
+        <div class="customer-fields">
+            <input type="text" id="customerName" placeholder="Ime i prezime">
+            <input type="email" id="customerEmail" placeholder="E-pošta">
+        </div>
+    </div>
+
+    <div class="seat-legend">
+        <span class="legend-item"><span class="legend-box available"></span> Slobodno</span>
+        <span class="legend-item"><span class="legend-box taken"></span> Zauzeto</span>
+    </div>
 
     <div class="seats">
         {{seats}}
     </div>
 
-    <a class="button" href="/">Povratak na filmove</a>
+    <a class="button button-secondary" href="/">Povratak na filmove</a>
 
 </div>
+
+<script>
+document.querySelectorAll('.seat-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        var name = document.getElementById('customerName').value.trim();
+        var email = document.getElementById('customerEmail').value.trim();
+        if (!name || !email) {
+            e.preventDefault();
+            alert('Molimo unesite ime i e-poštu prije odabira sjedala.');
+            return;
+        }
+        form.querySelector('[name="name"]').value = name;
+        form.querySelector('[name="email"]').value = email;
+    });
+});
+</script>
 
 </body>
 </html>

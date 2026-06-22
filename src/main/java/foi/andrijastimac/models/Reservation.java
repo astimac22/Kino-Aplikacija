@@ -2,19 +2,37 @@ package foi.andrijastimac.models;
 
 public class Reservation {
 
-    private String seatNumber;
-    private String screeningTime;
+    private final int id;
+    private final String seatNumber;
+    private final int screeningId;
+    private final String screeningTime;
+    private final String movieTitle;
+    private final String customerName;
+    private final String customerEmail;
 
-    public Reservation(String seatNumber, String screeningTime) {
+    public Reservation(
+            int id,
+            String seatNumber,
+            int screeningId,
+            String screeningTime,
+            String movieTitle,
+            String customerName,
+            String customerEmail
+    ) {
+        this.id = id;
         this.seatNumber = seatNumber;
+        this.screeningId = screeningId;
         this.screeningTime = screeningTime;
+        this.movieTitle = movieTitle;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
     }
 
-    public String getSeatNumber() {
-        return seatNumber;
-    }
-
-    public String getScreeningTime() {
-        return screeningTime;
-    }
+    public int getId() { return id; }
+    public String getSeatNumber() { return seatNumber; }
+    public int getScreeningId() { return screeningId; }
+    public String getScreeningTime() { return screeningTime; }
+    public String getMovieTitle() { return movieTitle; }
+    public String getCustomerName() { return customerName; }
+    public String getCustomerEmail() { return customerEmail; }
 }

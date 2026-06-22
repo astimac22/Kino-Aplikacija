@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <title>Promjena sjedala</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/">Filmovi</a>
+    <a href="/reservations">Moje rezervacije</a>
+</nav>
+
+<div class="container">
+
+    <h1>Promjena sjedala</h1>
+
+    <div class="change-info">
+        <p><strong>{{movieTitle}}</strong></p>
+        <p>Termin: {{screeningTime}}</p>
+        <p>Trenutno sjedalo: <strong class="current-seat-label">{{currentSeat}}</strong></p>
+        <p class="change-hint">Odaberite novo slobodno sjedalo. Trenutno sjedalo je označeno plavom bojom.</p>
+    </div>
+
+    <div class="seat-legend">
+        <span class="legend-item"><span class="legend-box available"></span> Slobodno</span>
+        <span class="legend-item"><span class="legend-box taken"></span> Zauzeto</span>
+        <span class="legend-item"><span class="legend-box current"></span> Vaše sjedalo</span>
+    </div>
+
+    <div class="seats">
+        {{seats}}
+    </div>
+
+    <a class="button button-secondary" href="/reservations">Odustani</a>
+
+</div>
+
+</body>
+</html>

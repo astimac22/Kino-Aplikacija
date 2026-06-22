@@ -29,7 +29,7 @@ public class SeatController {
 
             if (!seat.isReserved()) {
 
-                seatsHtml.append("<form method=\"POST\" action=\"/reserve\">");
+                seatsHtml.append("<form class=\"seat-form\" method=\"POST\" action=\"/reserve\">");
 
                 seatsHtml.append(
                         "<input type=\"hidden\" name=\"seat\" value=\""
@@ -50,6 +50,14 @@ public class SeatController {
                 );
 
                 seatsHtml.append("\">");
+
+                seatsHtml.append(
+                        "<input type=\"hidden\" name=\"name\" value=\"\">"
+                );
+
+                seatsHtml.append(
+                        "<input type=\"hidden\" name=\"email\" value=\"\">"
+                );
 
                 seatsHtml.append(
                         "<button class=\"seat\">"

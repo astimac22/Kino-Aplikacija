@@ -1,21 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="hr">
 <head>
     <title>Potvrda rezervacije</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
+<nav class="nav">
+    <a href="/">Filmovi</a>
+    <a href="/reservations">Moje rezervacije</a>
+</nav>
+
 <div class="container">
 
     <h1>Rezervacija uspješna!</h1>
 
     <div class="confirmation-card">
+        <p class="confirmation-id">Rezervacija #{{id}}</p>
+        <p><strong>{{movieTitle}}</strong></p>
         <p>Sjedalo: <strong>{{seat}}</strong></p>
         <p>Termin: <strong>{{screeningTime}}</strong></p>
+        <hr class="divider">
+        <p>Ime: {{name}}</p>
+        <p>E-pošta: {{email}}</p>
     </div>
 
-    <a class="button" href="/">Povratak na filmove</a>
+    <div class="confirmation-actions">
+        <a class="button" href="/reservations?email={{email}}">Moje rezervacije</a>
+        <a class="button button-secondary" href="/">Povratak na filmove</a>
+    </div>
 
 </div>
 

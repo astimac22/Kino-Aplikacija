@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class ClientHandler {
 
@@ -94,19 +96,23 @@ public class ClientHandler {
                 char[] buffer =
                         new char[contentLength];
 
-                in.read(
-                        buffer,
-                        0,
-                        contentLength
-                );
+                int bytesRead =
+                        in.read(
+                                buffer,
+                                0,
+                                contentLength
+                        );
 
                 body =
-                        new String(buffer);
+                        new String(buffer, 0, bytesRead);
             }
 
             Integer movieId = null;
             Integer screeningId = null;
             String seatNumber = null;
+            String name = null;
+            String email = null;
+            Integer reservationId = null;
 
             if (!query.isBlank()) {
 
@@ -116,32 +122,29 @@ public class ClientHandler {
                 for (String parameter : parameters) {
 
                     String[] pair =
-                            parameter.split("=");
+                            parameter.split("=", 2);
 
                     if (pair.length != 2) {
                         continue;
                     }
 
-                    if (
-                            pair[0].equals("movie")
-                    ) {
+                    String key = pair[0];
+                    String value = decode(pair[1]);
 
-                        movieId =
-                                Integer.parseInt(
-                                        pair[1]
-                                );
+                    if (key.equals("movie")) {
+                        movieId = Integer.parseInt(value);
                     }
 
-                    if (
-                            pair[0].equals(
-                                    "screening"
-                            )
-                    ) {
+                    if (key.equals("screening")) {
+                        screeningId = Integer.parseInt(value);
+                    }
 
-                        screeningId =
-                                Integer.parseInt(
-                                        pair[1]
-                                );
+                    if (key.equals("email")) {
+                        email = value;
+                    }
+
+                    if (key.equals("id")) {
+                        reservationId = Integer.parseInt(value);
                     }
                 }
             }
@@ -154,30 +157,37 @@ public class ClientHandler {
                 for (String parameter : parameters) {
 
                     String[] pair =
-                            parameter.split("=");
+                            parameter.split("=", 2);
 
                     if (pair.length != 2) {
                         continue;
                     }
 
-                    if (
-                            pair[0].equals("seat")
-                    ) {
+                    String key = pair[0];
+                    String value = decode(pair[1]);
 
-                        seatNumber =
-                                pair[1];
+                    if (key.equals("seat")) {
+                        seatNumber = value;
                     }
 
-                    if (
-                            pair[0].equals(
-                                    "screening"
-                            )
-                    ) {
+                    if (key.equals("screening")) {
+                        screeningId = Integer.parseInt(value);
+                    }
 
-                        screeningId =
-                                Integer.parseInt(
-                                        pair[1]
-                                );
+                    if (key.equals("name")) {
+                        name = value;
+                    }
+
+                    if (key.equals("email")) {
+                        email = value;
+                    }
+
+                    if (key.equals("id")) {
+                        reservationId = Integer.parseInt(value);
+                    }
+
+                    if (key.equals("_method")) {
+                        method = value;
                     }
                 }
             }
@@ -191,7 +201,10 @@ public class ClientHandler {
                             path,
                             movieId,
                             screeningId,
-                            seatNumber
+                            seatNumber,
+                            name,
+                            email,
+                            reservationId
                     );
 
             String contentType =
@@ -245,6 +258,18 @@ public class ClientHandler {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String decode(String value) {
+
+        try {
+            return URLDecoder.decode(
+                    value,
+                    StandardCharsets.UTF_8
+            );
+        } catch (Exception e) {
+            return value;
         }
     }
 }

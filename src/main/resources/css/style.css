@@ -15,6 +15,33 @@ h1 {
     margin-bottom: 20px;
 }
 
+h2 {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #475569;
+}
+
+/* Nav */
+
+.nav {
+    background: #1e293b;
+    padding: 14px 30px;
+    display: flex;
+    gap: 24px;
+}
+
+.nav a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.nav a:hover {
+    color: #ffffff;
+}
+
+/* Buttons */
+
 .button {
     display: inline-block;
     padding: 12px 24px;
@@ -22,6 +49,30 @@ h1 {
     color: white;
     text-decoration: none;
     border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: Arial, sans-serif;
+}
+
+.button:hover {
+    background: #1d4ed8;
+}
+
+.button-secondary {
+    background: #64748b;
+}
+
+.button-secondary:hover {
+    background: #475569;
+}
+
+.button-danger {
+    background: #ef4444;
+}
+
+.button-danger:hover {
+    background: #dc2626;
 }
 
 /* Movies */
@@ -45,6 +96,7 @@ h1 {
 .movie-card h2 {
     font-size: 1rem;
     margin: 0 0 12px 0;
+    color: #1e293b;
 }
 
 .movie-card a {
@@ -55,6 +107,10 @@ h1 {
     text-decoration: none;
     border-radius: 6px;
     font-size: 0.9rem;
+}
+
+.movie-card a:hover {
+    background: #1d4ed8;
 }
 
 /* Screenings */
@@ -90,7 +146,7 @@ h1 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    margin: 30px 0;
+    margin: 20px 0 30px 0;
 }
 
 .seat {
@@ -108,9 +164,88 @@ h1 {
     font-family: Arial, sans-serif;
 }
 
+.seat:hover {
+    background: #16a34a;
+}
+
 .reserved {
     background: #ef4444;
     cursor: default;
+}
+
+.current-seat {
+    background: #2563eb;
+    cursor: default;
+    color: white;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+/* Seat legend */
+
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.legend-box.available { background: #22c55e; }
+.legend-box.taken     { background: #ef4444; }
+.legend-box.current   { background: #2563eb; }
+
+/* Customer info (seats page) */
+
+.customer-info {
+    background: white;
+    border-radius: 8px;
+    padding: 24px 32px;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 0 30px 0;
+    text-align: left;
+    min-width: 320px;
+}
+
+.customer-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.customer-fields input {
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.customer-fields input:focus {
+    outline: none;
+    border-color: #2563eb;
 }
 
 /* Confirmation */
@@ -121,12 +256,142 @@ h1 {
     padding: 30px 40px;
     display: inline-block;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px 0 30px 0;
-    min-width: 280px;
+    margin: 20px 0 24px 0;
+    min-width: 300px;
     text-align: left;
 }
 
 .confirmation-card p {
     margin: 8px 0;
     font-size: 1.05rem;
+}
+
+.confirmation-id {
+    font-size: 0.85rem !important;
+    color: #64748b;
+    margin-bottom: 12px !important;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 16px 0;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Reservations list */
+
+.lookup-form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 36px 0;
+    flex-wrap: wrap;
+}
+
+.lookup-form input {
+    padding: 10px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: Arial, sans-serif;
+    width: 280px;
+}
+
+.lookup-form input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.reservation-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.reservation-info p {
+    margin: 4px 0;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+.reservation-movie {
+    font-size: 1.05rem !important;
+    font-weight: bold;
+    margin-bottom: 6px !important;
+}
+
+.reservation-id {
+    font-size: 0.8rem !important;
+    color: #94a3b8;
+    margin-top: 6px !important;
+}
+
+.reservation-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.reservation-actions form {
+    margin: 0;
+}
+
+.no-reservations {
+    text-align: center;
+    color: #64748b;
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Change seat page */
+
+.change-info {
+    background: white;
+    border-radius: 8px;
+    padding: 24px 32px;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 0 24px 0;
+    text-align: left;
+    min-width: 300px;
+}
+
+.change-info p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+.change-hint {
+    font-size: 0.85rem !important;
+    color: #64748b;
+    margin-top: 10px !important;
+}
+
+.current-seat-label {
+    color: #2563eb;
 }
